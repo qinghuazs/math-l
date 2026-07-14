@@ -33,3 +33,23 @@ test('cancel 后不再触发 onDone', async function () {
   await new Promise(function (r) { setTimeout(r, 80); });
   assert.equal(doneCalled, false);
 });
+
+test('duration 为 0 时立即完成且终值精确', async function () {
+  const CW = loadCW(['js/tween.js']);
+  let last = null, lastP = null, updates = 0;
+  await new Promise(function (done) {
+    CW.tween({ from: 3, to: 7, duration: 0, onUpdate: function (v, p) { last = v; lastP = p; updates++; }, onDone: done });
+  });
+  assert.equal(last, 7);
+  assert.equal(lastP, 1);
+  assert.equal(updates, 1);
+});
+
+test('未知 easing 名回退到 easeInOut 并正常完成', async function () {
+  const CW = loadCW(['js/tween.js']);
+  let last = null;
+  await new Promise(function (done) {
+    CW.tween({ from: 0, to: 5, duration: 20, easing: 'nope', onUpdate: function (v) { last = v; }, onDone: done });
+  });
+  assert.equal(last, 5);
+});

@@ -7,6 +7,7 @@
   };
   // CW.tween({from,to,duration,easing,onUpdate(v,p),onDone}) -> {cancel()}
   // 结束帧保证 v===to、p===1（不受缓动浮点误差影响）。
+  // 契约：onUpdate 自身不得抛异常，否则动画链中断且 onDone 永不触发。
   function tween(opts) {
     var from = opts.from, to = opts.to;
     var duration = opts.duration == null ? 600 : opts.duration;
