@@ -24,7 +24,7 @@
     var p = Promise.resolve();
     XS.forEach(function (x, i) {
       p = p.then(function () {
-        P.highlightCol(i + 1);
+        if (anim) P.highlightCol(i + 1);
         var a = S.dropPoint('s2-p' + i, x, F2(x), { color: WARM, animate: anim });
         var b = S.dropPoint('s2-q' + i, x, FH(x), { color: COOL, animate: anim });
         return anim ? Promise.all([a, b]).then(function () {
@@ -78,9 +78,8 @@
               S.plotCurve('s2-ch', FH, { color: COOL }),
             ]);
           }).then(function () {
-            S.addText('s2-l2', 1.6, 5.2, 'y = 2^x', { color: WARM, size: 18 });
-            S.addText('s2-lh', -3.9, 5.2, 'y = (1/2)^x', { color: COOL, size: 18 });
-            return anim ? null : null;
+            S.addText('s2-l2', 1.6, 5.2, 'y = 2<sup>x</sup>', { color: WARM, size: 18 });
+            S.addText('s2-lh', -3.9, 5.2, 'y = (1/2)<sup>x</sup>', { color: COOL, size: 18 });
           });
         },
       },

@@ -1232,7 +1232,7 @@ git add js/app.js js/scenes/s1-review.js && git commit -m "feat: 装配入口与
     var p = Promise.resolve();
     XS.forEach(function (x, i) {
       p = p.then(function () {
-        P.highlightCol(i + 1);
+        if (anim) P.highlightCol(i + 1);
         var a = S.dropPoint('s2-p' + i, x, F2(x), { color: WARM, animate: anim });
         var b = S.dropPoint('s2-q' + i, x, FH(x), { color: COOL, animate: anim });
         return anim ? Promise.all([a, b]).then(function () {
@@ -1286,9 +1286,8 @@ git add js/app.js js/scenes/s1-review.js && git commit -m "feat: 装配入口与
               S.plotCurve('s2-ch', FH, { color: COOL }),
             ]);
           }).then(function () {
-            S.addText('s2-l2', 1.6, 5.2, 'y = 2^x', { color: WARM, size: 18 });
-            S.addText('s2-lh', -3.9, 5.2, 'y = (1/2)^x', { color: COOL, size: 18 });
-            return anim ? null : null;
+            S.addText('s2-l2', 1.6, 5.2, 'y = 2<sup>x</sup>', { color: WARM, size: 18 });
+            S.addText('s2-lh', -3.9, 5.2, 'y = (1/2)<sup>x</sup>', { color: COOL, size: 18 });
           });
         },
       },
@@ -1330,8 +1329,8 @@ git add js/scenes/s2-plotting.js && git commit -m "feat: S2 描点法作图（�
   function base() {
     S.plotCurve('s3-c2', F2, { color: WARM });
     S.plotCurve('s3-ch', FH, { color: COOL });
-    S.addText('s3-l2', 1.6, 5.2, 'y = 2^x', { color: WARM, size: 18 });
-    S.addText('s3-lh', -3.9, 5.2, 'y = (1/2)^x', { color: COOL, size: 18 });
+    S.addText('s3-l2', 1.6, 5.2, 'y = 2<sup>x</sup>', { color: WARM, size: 18 });
+    S.addText('s3-lh', -3.9, 5.2, 'y = (1/2)<sup>x</sup>', { color: COOL, size: 18 });
   }
 
   var scene = {
@@ -1671,7 +1670,7 @@ git add js/scenes/s5-properties.js && git commit -m "feat: S5 性质汇总（值
             S.addSegment(keep('s6-v2'), [3, 0], [3, pow(1.7, 3)], { dash: 2 });
             var a = S.dropPoint(keep('s6-p1'), 2.5, pow(1.7, 2.5), { color: WARM, name: '1.7^2.5', animate: anim, labelOffset: [-70, 8] });
             var b = S.dropPoint(keep('s6-p2'), 3, pow(1.7, 3), { color: WARM, name: '1.7^3', animate: anim });
-            S.addText(keep('s6-t1'), -3.1, 5.8, 'y = 1.7^x（增）', { color: WARM, size: 17 });
+            S.addText(keep('s6-t1'), -3.1, 5.8, 'y = 1.7<sup>x</sup>（增）', { color: WARM, size: 17 });
             return Promise.all([a, b]);
           });
         },
@@ -1688,7 +1687,7 @@ git add js/scenes/s5-properties.js && git commit -m "feat: S5 性质汇总（值
             S.addVLine(keep('s6-v3'), -0.3, { dash: 2, color: '#f9a825', width: 2.5 });
             var a = S.dropPoint(keep('s6-p3'), -0.3, pow(0.3, -0.3), { color: COOL, name: '0.3^{-0.3}', animate: anim, labelOffset: [10, 12] });
             var b = S.dropPoint(keep('s6-p4'), -0.3, pow(0.5, -0.3), { color: '#0097a7', name: '0.5^{-0.3}', animate: anim, labelOffset: [10, -14] });
-            S.addText(keep('s6-t2'), -3.1, 5.8, 'y = 0.3^x 与 y = 0.5^x', { color: COOL, size: 17 });
+            S.addText(keep('s6-t2'), -3.1, 5.8, 'y = 0.3<sup>x</sup> 与 y = 0.5<sup>x</sup>', { color: COOL, size: 17 });
             return Promise.all([a, b]);
           });
         },
