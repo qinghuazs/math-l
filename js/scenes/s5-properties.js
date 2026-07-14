@@ -9,8 +9,8 @@
   function base() {
     S.plotCurve('s5-c2', F2, { color: WARM });
     S.plotCurve('s5-ch', FH, { color: COOL });
-    S.addText('s5-l2', 1.7, 5.4, 'a > 1', { color: WARM, size: 18 });
-    S.addText('s5-lh', -3.9, 5.4, '0 < a < 1', { color: COOL, size: 18 });
+    S.addText('s5-l2', 1.7, 5.4, 'a &gt; 1', { color: WARM, size: 18 });
+    S.addText('s5-lh', -3.9, 5.4, '0 &lt; a &lt; 1', { color: COOL, size: 18 });
   }
 
   var scene = {
