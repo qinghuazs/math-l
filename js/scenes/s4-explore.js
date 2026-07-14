@@ -57,7 +57,7 @@
         },
       },
       {
-        narration: '先看 $a>1$：滑块从 $1.5$ 增大到 $5$。观察 $y$ 轴<b>右侧</b>——底数越大，图像升得越高，简记<b>"底大幅高"</b>。',
+        narration: '先看 $a\\gt 1$：滑块从 $1.5$ 增大到 $5$。观察 $y$ 轴<b>右侧</b>——底数越大，图像升得越高，简记<b>"底大幅高"</b>。',
         enter: function (anim) {
           drawFamily(false);
           if (!sld || !S.get('s4-sld')) buildSlider(1.5);
@@ -80,7 +80,7 @@
         },
       },
       {
-        narration: '所有指数函数的图像按底数分成<b>两类</b>：$a>1$（暖色）与 $0\\lt a\\lt 1$（冷色）。研究性质时分这两种情况。',
+        narration: '所有指数函数的图像按底数分成<b>两类</b>：$a\\gt 1$（暖色）与 $0\\lt a\\lt 1$（冷色）。研究性质时分这两种情况。',
         enter: function () {
           S.remove('s4-sh2');
           FAMILY.forEach(function (f) {
