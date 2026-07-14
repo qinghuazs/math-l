@@ -223,13 +223,15 @@
         };
       },
       // 底数滑块。o: {x1,y1,x2,y2,min,start,max,name,onChange}
+      // withLabel:false 禁止 JSXGraph 自动在手柄旁生成 "name = value" label，
+      // 避免与场景层通过 addText 手动创建的动态读数叠放产生双重影。
       slider: function (id, o) {
         var s = board.create('slider',
           [[o.x1, o.y1], [o.x2, o.y2], [o.min, o.start, o.max]], {
             name: o.name || 'a', snapWidth: 0.05,
+            withLabel: false,
             fillColor: '#455a64', strokeColor: '#455a64',
             baseline: { strokeColor: '#90a4ae' }, highline: { strokeColor: '#6a1b9a' },
-            label: { fontSize: 16, strokeColor: '#37474f' },
           });
         if (o.onChange) s.on('drag', function () { o.onChange(s.Value()); });
         put(id, s);

@@ -1557,7 +1557,7 @@ git add js/scenes/s4-explore.js && git commit -m "feat: S4 底数滑块探索（
         },
       },
       {
-        narration: '<b>单调性</b>：看动点。$a>1$ 时从左到右一路<b>上升</b>——增函数；$0<a<1$ 时一路<b>下降</b>——减函数。',
+        narration: '<b>单调性</b>：看动点。$a\\gt 1$ 时从左到右一路<b>上升</b>——增函数；$0\\lt a\\lt 1$ 时一路<b>下降</b>——减函数。',
         enter: function (anim) {
           if (!anim) return null;
           var m1 = S.movingPoint('s5-m1', F2, { from: -3.8, color: WARM });
@@ -1603,7 +1603,7 @@ git add js/scenes/s4-explore.js && git commit -m "feat: S4 底数滑块探索（
         enter: function () {
           S.remove('s5-g1'); S.remove('s5-g2'); S.remove('s5-x1'); S.remove('s5-x2');
           P.renderTable({
-            head: ['', '$0<a<1$', '$a>1$'],
+            head: ['', '$0\\lt a\\lt 1$', '$a\\gt 1$'],
             rows: [
               ['定义域', '$\\mathbb{R}$', '$\\mathbb{R}$'],
               ['值域', '$(0,+\\infty)$', '$(0,+\\infty)$'],
