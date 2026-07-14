@@ -1,5 +1,9 @@
 (function (CW) {
   'use strict';
+  // 场景文件模板约定（s2-s7 同构）：
+  // S = stage（画板），P = panel（面板），由 setup 赋值，导演保证 setup 先于任何 enter。
+  // 步骤 enter(animate) -> Promise|undefined：含舞台动画时必须 return 其 Promise
+  // （如 return S.plotCurve(...)），否则导演不等动画完成就会解锁下一步。
   var S, P;
   var scene = {
     id: 's1',

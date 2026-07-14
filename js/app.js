@@ -6,7 +6,7 @@
   }
   function toggleFullscreen() {
     if (document.fullscreenElement) document.exitFullscreen();
-    else document.documentElement.requestFullscreen();
+    else document.documentElement.requestFullscreen().catch(function () { /* 策略拒绝时静默，避免控制台红字 */ });
   }
   function buildUI(director, scenes) {
     var dots = document.getElementById('dots');
@@ -32,6 +32,7 @@
     };
   }
   window.addEventListener('DOMContentLoaded', function () {
+    // 场景文件部分缺失时 CW.scenes 非空仍正常启动；两库或全部场景缺失才降级
     if (typeof JXG === 'undefined' || typeof katex === 'undefined' || !CW.scenes || !CW.scenes.length) {
       fatal();
       return;
