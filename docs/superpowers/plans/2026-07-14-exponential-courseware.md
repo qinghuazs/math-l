@@ -262,7 +262,7 @@ git add js/tween.js tests/tween.test.js && git commit -m "feat: tween 缓动工�
 </header>
 <main>
   <div id="board" class="jxgbox"></div>
-  <aside id="panel"></aside>
+  <aside id="panel" aria-label="讲解面板"></aside>
 </main>
 <footer>
   <button id="btn-prev" type="button">◀ 上一步</button>
@@ -330,12 +330,12 @@ main {
   box-shadow: 0 2px 12px rgba(0,0,0,.08);
 }
 #panel { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; padding: 6px 6px 6px 2px; }
-.p-scene { font-size: clamp(18px, 1.8vw, 25px); font-weight: 700; color: var(--accent); }
-.p-narration { font-size: clamp(18px, 1.7vw, 23px); line-height: 1.7; }
+.p-scene { font-size: clamp(20px, 1.8vw, 25px); font-weight: 700; color: var(--accent); }
+.p-narration { font-size: clamp(20px, 1.7vw, 23px); line-height: 1.7; }
 .p-narration.flash { animation: fadein .45s both; }
 .p-extras { display: flex; flex-direction: column; gap: 12px; }
 .p-controls:empty, .p-extras:empty { display: none; }
-.vtable { border-collapse: collapse; font-size: clamp(16px, 1.5vw, 21px); align-self: flex-start; }
+.vtable { border-collapse: collapse; font-size: clamp(18px, 1.5vw, 21px); align-self: flex-start; }
 .vtable th, .vtable td {
   border: 1.5px solid #b0bec5; padding: 6px 13px; text-align: center; min-width: 54px;
 }
@@ -345,28 +345,28 @@ main {
 .card {
   border-left: 5px solid var(--accent); background: #f3e5f5;
   padding: 10px 16px; border-radius: 6px;
-  font-size: clamp(17px, 1.6vw, 22px); line-height: 1.6;
+  font-size: clamp(20px, 1.6vw, 22px); line-height: 1.6;
   animation: fadein .5s both;
 }
 .card.warm { border-color: var(--warm); background: #fbe9e7; }
 .card.cool { border-color: var(--cool); background: #e3f2fd; }
 footer { display: flex; align-items: center; gap: 16px; padding: 8px 22px 12px; }
 footer button {
-  font-size: 17px; padding: 8px 20px; border-radius: 8px;
+  font-size: 18px; padding: 8px 20px; border-radius: 8px;
   border: 1.5px solid #90a4ae; background: #fff; cursor: pointer; color: var(--ink);
 }
 footer button:hover { background: #eceff1; }
 #step-ind { font-size: 16px; color: var(--muted); min-width: 150px; }
-.hint { margin-left: auto; color: #90a4ae; font-size: 14px; }
+.hint { margin-left: auto; color: #90a4ae; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #fatal {
-  position: fixed; left: 20%; right: 20%; top: 34%;
+  position: fixed; z-index: 9999; left: 20%; right: 20%; top: 34%;
   background: #ffebee; color: #b71c1c; font-size: 22px; line-height: 1.6;
   padding: 34px; border-radius: 12px; text-align: center;
   box-shadow: 0 8px 40px rgba(0,0,0,.25);
 }
 @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
-@media (max-width: 1100px) { main { grid-template-columns: 58fr 42fr; } }
+@media (max-width: 1100px) { main { grid-template-columns: 58fr 42fr; } .hint { display: none; } }
 ```
 
 - [ ] **Step 3: 浏览器验证布局**
