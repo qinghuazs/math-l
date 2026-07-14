@@ -19,6 +19,7 @@ function loadCW(files, extraCtx) {
     cancelAnimationFrame: function (id) { clearTimeout(id); },
   };
   Object.assign(ctx, extraCtx || {});
+  ctx.window = window; // extraCtx 不得覆盖 window，否则 return window.CW 失效
   ctx.globalThis = ctx;
   vm.createContext(ctx);
   files.forEach(function (f) {
