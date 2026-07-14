@@ -26,9 +26,19 @@
     }
     initBoard(DEFAULT_BBOX);
 
-    // 所有舞台动画统一经此登记，reset 时可整体取消
+    // 所有舞台动画统一经此登记，reset 时可整体取消；完成后自回收句柄
     function runTween(opts) {
-      var h = CW.tween(opts);
+      var h;
+      var origDone = opts.onDone;
+      h = CW.tween({
+        from: opts.from, to: opts.to, duration: opts.duration, easing: opts.easing,
+        onUpdate: opts.onUpdate,
+        onDone: function () {
+          var idx = tweens.indexOf(h);
+          if (idx !== -1) tweens.splice(idx, 1);
+          if (origDone) origDone();
+        },
+      });
       tweens.push(h);
       return h;
     }
@@ -49,7 +59,7 @@
       getBoard: function () { return board; },
       get: function (id) { return reg.get(id); },
       reset: function (bbox) {
-        tweens.forEach(function (t) { t.cancel(); });
+        tweens.forEach(function (t) { t.cancel(); }); // 必须在 freeBoard 前：防 onUpdate 摸到已销毁对象
         tweens.length = 0;
         JXG.JSXGraph.freeBoard(board);
         reg.clear();
@@ -167,6 +177,7 @@
         });
       },
       // 沿 Y 轴翻折动画：绘制 y=baseFn(s*x)，s 从 1 到 -1（视觉=绕 Y 轴翻转）
+      // 定义域取调用时视窗快照，翻折期间勿并发 flyTo。
       mirrorFold: function (id, baseFn, o) {
         o = o || {};
         var s = 1;
@@ -187,6 +198,7 @@
         });
       },
       // 沿曲线运动的点：mp = movingPoint(...); await mp.run(to, duration)
+      // 注意：run 须顺序 await（续跑语义），并发调用会竞争闭包 cx。
       movingPoint: function (id, fn, o) {
         o = o || {};
         var cx = o.from == null ? 0 : o.from;
