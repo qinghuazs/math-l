@@ -48,6 +48,9 @@
       return p.then(function () {
         s = ts; k = tk; busy = false;
         writeHash(); notify();
+      }, function (err) {
+        busy = false; // 课堂保命：快放失败也不锁死键盘
+        if (win.console) win.console.error('[director] replay failed', err);
       });
     }
 
@@ -56,11 +59,16 @@
       var sc = scenes[s];
       if (k + 1 < sc.steps.length) {
         busy = true;
-        k += 1;
-        var step = sc.steps[k];
-        panel.setNarration(step.narration);
-        return Promise.resolve(step.enter(true)).then(function () {
-          busy = false; writeHash(); notify();
+        var target = k + 1;
+        var step = sc.steps[target];
+        return Promise.resolve().then(function () {
+          panel.setNarration(step.narration);
+          return step.enter(true);
+        }).then(function () {
+          k = target; busy = false; writeHash(); notify();
+        }, function (err) {
+          busy = false; // 课堂保命：失败必释放；k 未提交，光标停在上一完好步
+          if (win.console) win.console.error('[director] step enter failed', err);
         });
       }
       if (s + 1 < scenes.length) return replay(s + 1, 0, true);
@@ -105,6 +113,7 @@
       win.addEventListener('keydown', onKey);
       win.addEventListener('hashchange', function () {
         if (win.location.hash === expectedHash) return; // 自己写的，忽略
+        if (busy) return; // 进行中的 replay 不被外部改 hash 打断
         var hh = parseHash(win.location.hash);
         if (hh) replay(hh.s, hh.k, false);
       });
