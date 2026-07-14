@@ -18,6 +18,7 @@
             { left: '$', right: '$', display: false },
           ],
           throwOnError: false,
+          errorCallback: function (msg) { console.warn('[KaTeX]', msg); },
         });
       }
     }
@@ -33,6 +34,7 @@
         narrEl.classList.add('flash');
       },
       // cfg: { head: [], rows: [[]], popRow: 行号|null } 全量重绘（幂等，供快放）
+      // 约定：每行第 0 列视为行标签（如 $y=2^x$），popRow 弹入动画只作用于数据列。
       renderTable: function (cfg) {
         var old = extraEl.querySelector('table.vtable');
         if (old) old.remove();
@@ -55,7 +57,7 @@
             Array.prototype.forEach.call(tr.children, function (td, i) {
               if (i > 0 && td.textContent) {
                 td.classList.add('pop');
-                td.style.animationDelay = (i * 90) + 'ms';
+                td.style.animationDelay = ((i - 1) * 90) + 'ms';
               }
             });
           }
@@ -74,7 +76,8 @@
           if (c) c.classList.add('hl');
         });
       },
-      // 追加结论卡片；cls 可选 'warm'|'cool'
+      // 追加结论卡片；cls 可选 'warm'|'cool'。
+      // 契约：本方法只追加不去重——导演 replay 前必调 clearExtras 清场（见 director.js）。
       renderCard: function (html, cls) {
         var d = document.createElement('div');
         d.className = 'card' + (cls ? ' ' + cls : '');
@@ -83,6 +86,7 @@
         math(d);
         return d;
       },
+      // 清空表格/卡片区（renderCard 防重的另一端；KaTeX 渲染结果随 DOM 一并销毁）
       clearExtras: function () { extraEl.innerHTML = ''; },
       setControls: function (el) { ctrlEl.innerHTML = ''; if (el) ctrlEl.appendChild(el); },
     };
