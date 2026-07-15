@@ -386,6 +386,19 @@
         board.update();
         return r;
       },
+      // 圆弧：圆心 center、起点 from（定半径）、逆时针扫到 to 方向。坐标可为函数。
+      // o:{color,width,dash}。典型用法：√2 在数轴上的落点（对角线长为半径画弧交数轴）。
+      addArc: function (id, center, from, to, o) {
+        o = o || {};
+        var gc = ghost(center), gf = ghost(from), gt = ghost(to);
+        var a = board.create('arc', [gc, gf, gt], {
+          strokeColor: o.color || '#e64a19', strokeWidth: o.width == null ? 3 : o.width,
+          dash: o.dash || 0, highlight: false, fixed: true,
+        });
+        put(id, [a, gc, gf, gt]);
+        board.update();
+        return a;
+      },
       // 通用多边形（支点三角/箭头/卡片底等示意图形）。pts: [[x,y],...]（坐标可为函数）
       // o 同时接受直觉别名：color/fillColor、opacity/fillOpacity、borderColor/strokeColor、borderWidth/strokeWidth
       addPolygon: function (id, pts, o) {
