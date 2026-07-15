@@ -47,9 +47,17 @@
       return h;
     }
 
+    // 兼容"整点函数"坐标写法：function(){return [x,y];} 自动拆为 JSXGraph 认可的 [fnX, fnY]
+    function pt(p) {
+      if (typeof p === 'function') {
+        return [function () { return p()[0]; }, function () { return p()[1]; }];
+      }
+      return p;
+    }
+
     // 隐形构造点（射线/角的几何锚点，不显示；随所属 id 一并注册清理）
     function ghost(coords) {
-      return board.create('point', coords, { visible: false, fixed: true, withLabel: false });
+      return board.create('point', pt(coords), { visible: false, fixed: true, withLabel: false });
     }
 
     // 幂等登记：同 id 再次绘制先删旧对象——场景可放心用固定 id 重建状态
@@ -131,7 +139,7 @@
       },
       addSegment: function (id, p1, p2, o) {
         o = o || {};
-        return put(id, board.create('segment', [p1, p2], {
+        return put(id, board.create('segment', [pt(p1), pt(p2)], {
           strokeColor: o.color || '#90a4ae', strokeWidth: o.width || 2,
           dash: o.dash == null ? 2 : o.dash, highlight: false, fixed: true,
         }));
@@ -385,7 +393,7 @@
         var fill = o.color || o.fillColor || '#546e7a';
         var fop = o.opacity != null ? o.opacity : (o.fillOpacity != null ? o.fillOpacity : 1);
         var bw = o.borderWidth != null ? o.borderWidth : (o.strokeWidth != null ? o.strokeWidth : 0);
-        var poly = board.create('polygon', pts, {
+        var poly = board.create('polygon', pts.map(pt), {
           fillColor: fill, fillOpacity: fop,
           highlight: false, fixed: true,
           borders: { strokeWidth: bw, strokeColor: o.borderColor || o.strokeColor || fill, highlight: false },

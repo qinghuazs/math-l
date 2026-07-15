@@ -69,16 +69,7 @@
           S.remove('s5-note');
           S.actor('s5-title', 0, 7.0, '小结', { color: WARM, size: 22, bold: true });
 
-          // 小结表格（6行）
-          var rows = [
-            ['定义',     '对概念本质特征的规定',          WARM   ],
-            ['命题',     '判断一件事情的语句',            COOL   ],
-            ['题设/结论', '"如果…"（条件）/"那么…"（推断）', COOL  ],
-            ['真命题',   '正确的命题（经验证/推理）',      GREEN  ],
-            ['假命题/反例', '错误命题；一个反例即可否定',   WARN2  ],
-            ['定理',     '经推理证实、可作推理依据的真命题', PURPLE],
-          ];
-          // WARN2 变量未定义，改为 WARM
+          // 小结六行：画板逐行底色+标签+释义
           var colors = [WARM, COOL, COOL, GREEN, WARM, PURPLE];
           var labels = ['定义', '命题', '题设/结论', '真命题', '假命题/反例', '定理'];
           var descs  = [
