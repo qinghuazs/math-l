@@ -117,7 +117,7 @@
         if (!o.animate) return Promise.resolve(p);
         return new Promise(function (res) {
           runTween({
-            from: target * 3, to: target, duration: 320, easing: 'easeOut',
+            from: target * 3, to: target, duration: 420, easing: 'easeOutBack',
             onUpdate: function (v) { p.setAttribute({ size: v }); },
             onDone: function () { res(p); },
           });
@@ -170,7 +170,7 @@
         var from = board.getBoundingBox();
         return new Promise(function (res) {
           runTween({
-            from: 0, to: 1, duration: o.duration || 1200,
+            from: 0, to: 1, duration: o.duration || 1200, easing: 'easeInOutQuart',
             onUpdate: function (v) {
               var bb = from.map(function (a, i) { return a + (bbox[i] - a) * v; });
               board.setBoundingBox(bb, false);
@@ -194,7 +194,7 @@
         put(id, c);
         return new Promise(function (res) {
           runTween({
-            from: 1, to: -1, duration: o.duration || 1500,
+            from: 1, to: -1, duration: o.duration || 1500, easing: 'easeInOutQuart',
             onUpdate: function (v) { s = v; board.update(); },
             onDone: function () { res(c); },
           });
@@ -245,7 +245,7 @@
       animateSlider: function (sliderObj, target, duration) {
         return new Promise(function (res) {
           runTween({
-            from: sliderObj.Value(), to: target, duration: duration || 1500,
+            from: sliderObj.Value(), to: target, duration: duration || 1500, easing: 'easeInOutQuart',
             onUpdate: function (v) { sliderObj.setValue(v); board.update(); },
             onDone: res,
           });
@@ -260,7 +260,7 @@
         return new Promise(function (res) {
           (function once() {
             runTween({
-              from: base, to: base * 2.1, duration: 200, easing: 'easeOut',
+              from: base, to: base * 2.1, duration: 200, easing: 'easeOutBack',
               onUpdate: function (v) { el.setAttribute({ size: v }); },
               onDone: function () {
                 runTween({
@@ -324,7 +324,7 @@
             var sx = px, sy = py;
             return new Promise(function (res) {
               runTween({
-                from: 0, to: 1, duration: duration == null ? 900 : duration,
+                from: 0, to: 1, duration: duration == null ? 900 : duration, easing: 'easeInOutQuart',
                 onUpdate: function (v) { px = sx + (nx - sx) * v; py = sy + (ny - sy) * v; board.update(); },
                 onDone: res,
               });
