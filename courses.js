@@ -10,7 +10,17 @@ window.COURSES = {
         { id: 'grade7a', title: '七年级上册', chapters: [
           { id: 'ch01', title: '第1章 有理数', lessons: [] },
           { id: 'ch02', title: '第2章 整式的加减', lessons: [] },
-          { id: 'ch03', title: '第3章 一元一次方程', lessons: [] },
+          { id: 'ch03', title: '第3章 一元一次方程', lessons: [
+            {
+              id: '7a-3.1',
+              title: '3.1 一元一次方程（概念与等式性质）',
+              path: 'courses/junior/grade7a/ch03-linear-equations/s3.1-concept-and-properties/',
+              status: 'done',
+              scenes: ['s1-intro.js', 's2-what.js', 's3-linear.js', 's4-balance.js',
+                's5-examples.js', 's6-transposition.js', 's7-summary.js'],
+              expectSteps: [3, 3, 4, 5, 4, 3, 6],
+            },
+          ] },
           { id: 'ch04', title: '第4章 几何图形初步', lessons: [] },
         ] },
         { id: 'grade7b', title: '七年级下册', chapters: [

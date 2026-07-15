@@ -312,7 +312,7 @@
         var t = board.create('text',
           [function () { return px; }, function () { return py; }, str], {
             fontSize: o.size || 17, strokeColor: o.color || '#37474f',
-            cssStyle: o.bold ? 'font-weight:700' : '',
+            cssStyle: (o.bold ? 'font-weight:700;' : '') + (o.css || ''),
             anchorX: 'middle', anchorY: 'middle',
             fixed: true, highlight: false,
           });
@@ -331,6 +331,18 @@
             });
           },
         };
+      },
+      // 通用多边形（支点三角/箭头等示意图形）。pts: [[x,y],...]（坐标可为函数）
+      addPolygon: function (id, pts, o) {
+        o = o || {};
+        var poly = board.create('polygon', pts, {
+          fillColor: o.color || '#546e7a', fillOpacity: o.opacity == null ? 1 : o.opacity,
+          highlight: false, fixed: true,
+          borders: { strokeWidth: o.borderWidth == null ? 0 : o.borderWidth, strokeColor: o.borderColor || o.color || '#546e7a', highlight: false },
+          vertices: { visible: false, fixed: true },
+        });
+        board.update();
+        return put(id, poly);
       },
       // 通用补间：场景自定义动画的正规出口（纳入 reset 统一取消体系，勿在场景直用 CW.tween）
       animate: function (opts) {
