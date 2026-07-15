@@ -7,6 +7,7 @@
   --ink: #263238;
   --muted: #546e7a;
   --bg: #f7f8fa;
+  --animate-duration: .5s; /* Animate.css 效果与本主题动效同拍（库默认 1s） */
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -53,8 +54,9 @@ main {
   border-left: 5px solid var(--accent); background: #f3e5f5;
   padding: 10px 16px; border-radius: 6px;
   font-size: clamp(20px, 1.6vw, 22px); line-height: 1.6;
-  animation: cardin .5s cubic-bezier(.34,1.56,.64,1) both;
 }
+/* 默认弹入；带 Animate.css 效果类时让位（否则本条 animation-name 会覆盖效果） */
+.card:not(.animate__animated) { animation: cardin .5s cubic-bezier(.34,1.56,.64,1) both; }
 .card.warm { border-color: var(--warm); background: #fbe9e7; }
 .card.cool { border-color: var(--cool); background: #e3f2fd; }
 footer { display: flex; align-items: center; gap: 16px; padding: 8px 22px 12px; }

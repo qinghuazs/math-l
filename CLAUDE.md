@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **数学动态课件库**：面向课堂投影的网页课件集合（初中六册蓝图 + 高中课程），**零构建、零运行时依赖、完全离线**——浏览器直接打开任意 `index.html` 即运行（file:// 协议）。Node 仅用于开发期测试。
 
 - 根 `index.html`：课程导航页，读 `courses.js`（数据即代码——file:// 下 fetch json 会被 CORS 拦截，所以课程清单是 `window.COURSES = {...}` 的 script）。
-- `shared/`：全仓库唯一一份的引擎（`core/` 五件）、主题（`css/main.css`）与第三方库（`vendor/` 的 JSXGraph + KaTeX，约 7MB，**绝不随课复制**）。
+- `shared/`：全仓库唯一一份的引擎（`core/` 五件）、主题（`css/main.css`）与第三方库（`vendor/` 的 JSXGraph + KaTeX + Animate.css，约 7MB，**绝不随课复制**）。
 - `courses/<学段>/<册>/<章>/<节>/`：每课自包含目录 = `index.html`（引用 shared，上溯 5 层 `../../../../../shared/`）+ `scenes/` 场景剧本。
 
 ## 命令
@@ -24,7 +24,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **director.js（导演）**：维护光标 (环节 s, 步 k)。前进 = 执行新步 `enter(true)`；后退/任意跳转 = `stage.reset` → `scene.setup` → 步 0..k 依次 `enter(false)`（**"重置+快放"机制**）。这就是场景每步只写 enter、从不写逆操作的原因。`busy` 防抖挡住连按；异常路径必须释放 busy 且不提交光标（课堂不能死锁——有专门回归测试）。
 - **stage.js（舞台）**：JSXGraph 封装。`reg` 注册表按 id 管理对象，`put` 同 id 先删旧再登记（**幂等**——场景可放心用固定 id 重建状态）；`reset` = freeBoard 整板重建；所有动画必须经 `runTween` 登记（不要直接调 `CW.tween`），reset 时统一 cancel 防孤儿动画。场景层自定义补间用 `stage.animate({from,to,duration,onUpdate})`（runTween 的正规出口）。几何/集合类课程 API：`addCircle`（圆，圆心/半径可传函数做动态动画）、`actor`（可自由移动的文本元素，返回 `{obj, moveTo(x,y,ms)}`，moveTo 须顺序 await）。场景可声明 `board: {axis:false, keepAspect:true}` 关闭坐标轴/开启等比（**画圆必须开 keepAspect，否则圆被拉成椭圆**），由导演透传给 `stage.reset`。
-- **panel.js（面板）**：讲解词/KaTeX/数值表/结论卡片。`renderTable` 全量重绘幂等；`renderCard` 只追加不去重——导演 replay 前会调 `clearExtras` 清场，这对契约不能破坏。
+- **panel.js（面板）**：讲解词/KaTeX/数值表/结论卡片。`renderTable` 全量重绘幂等；`renderCard` 只追加不去重——导演 replay 前会调 `clearExtras` 清场，这对契约不能破坏。`renderCard(html, cls, effect)` 第三参可选 Animate.css 效果名（如 'headShake'/'tada'，不含 animate__ 前缀），节制使用于对错反馈等关键卡片。
 - **scenes/（每课剧本）**：纯数据 `{id, title, bbox, setup(stage,panel), steps:[{narration, enter(anim)}]}`，按该课 `index.html` 的 script 顺序注册进 `CW.scenes`（每课页面独立加载，无跨课冲突）。
 
 ## 新增一课的标准流程

@@ -76,11 +76,13 @@
           if (c) c.classList.add('hl');
         });
       },
-      // 追加结论卡片；cls 可选 'warm'|'cool'。
+      // 追加结论卡片；cls 可选 'warm'|'cool'；effect 可选 Animate.css 效果名
+      // （如 'flipInX'/'tada'，不含 animate__ 前缀；页面需已引 vendor 的 animate.min.css）。
       // 契约：本方法只追加不去重——导演 replay 前必调 clearExtras 清场（见 director.js）。
-      renderCard: function (html, cls) {
+      renderCard: function (html, cls, effect) {
         var d = document.createElement('div');
-        d.className = 'card' + (cls ? ' ' + cls : '');
+        d.className = 'card' + (cls ? ' ' + cls : '') +
+          (effect ? ' animate__animated animate__' + effect : '');
         d.innerHTML = html;
         extraEl.appendChild(d);
         math(d);
