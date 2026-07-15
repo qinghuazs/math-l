@@ -40,14 +40,14 @@
           S.addText('s6-arrow-r3', 3.5, -4.0, '条件', { size: 16, color: WARM });
           S.addText('s6-arrow-l4', -4.5, -5.2, '= 直线平行', { size: 14, color: COOL });
           S.addText('s6-arrow-r4', 3.5, -5.2, '= 直线平行', { size: 14, color: WARM });
-          P.renderTable(
-            ['', '判定', '性质'],
-            [
+          P.renderTable({
+            head: ['', '判定', '性质'],
+            rows: [
               ['条件', '角的关系', '直线平行'],
               ['结论', '直线平行', '角的关系'],
               ['方向', '角 ⟹ 线', '线 ⟹ 角'],
             ]
-          );
+          });
           if (anim) { return delay(300); }
         },
       },
