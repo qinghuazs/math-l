@@ -47,6 +47,14 @@
       return h;
     }
 
+    // 画板文本 KaTeX 支持：静态字符串中的 $...$ 片段转为 KaTeX HTML（函数文本不转换，保持每帧轻量）
+    function tex(str) {
+      if (typeof str !== 'string' || str.indexOf('$') === -1 || typeof katex === 'undefined') return str;
+      return str.replace(/\$([^$]+)\$/g, function (m, expr) {
+        try { return katex.renderToString(expr, { throwOnError: false }); } catch (e) { return expr; }
+      });
+    }
+
     // 兼容"整点函数"坐标写法：function(){return [x,y];} 自动拆为 JSXGraph 认可的 [fnX, fnY]
     function pt(p) {
       if (typeof p === 'function') {
@@ -158,10 +166,11 @@
           dash: o.dash == null ? 2 : o.dash, highlight: false, fixed: true,
         }));
       },
-      // str 可为字符串或函数（动态文本）
+      // str 可为字符串或函数（动态文本）；两者均支持 $..$ KaTeX 数学式（无 $ 的动态文本零开销）
       addText: function (id, x, y, str, o) {
         o = o || {};
-        return put(id, board.create('text', [x, y, str], {
+        var content = typeof str === 'function' ? function () { return tex(str()); } : tex(str);
+        return put(id, board.create('text', [x, y, content], {
           fontSize: o.size || 16, strokeColor: o.color || '#37474f',
           anchorX: o.anchorX || 'left', fixed: true, highlight: false,
         }));
@@ -324,7 +333,7 @@
         o = o || {};
         var px = x, py = y;
         var t = board.create('text',
-          [function () { return px; }, function () { return py; }, str], {
+          [function () { return px; }, function () { return py; }, tex(str)], {
             fontSize: o.size || 17, strokeColor: o.color || '#37474f',
             cssStyle: (o.bold ? 'font-weight:700;' : '') + (o.css || ''),
             anchorX: 'middle', anchorY: 'middle',
