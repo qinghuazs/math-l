@@ -10,7 +10,6 @@
   function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
   function addCircles() {
-    ax = -5.2; bx = 5.2;
     S.addCircle('s1-ca', function () { return ax; }, 0, R, { color: WARM, width: 3.5, fill: WARM, fillOpacity: 0.08 });
     S.addCircle('s1-cb', function () { return bx; }, 0, R, { color: COOL, width: 3.5, fill: COOL, fillOpacity: 0.08 });
     cast.ta = S.actor('s1-ta', -5.2, 4.3, 'A · 喜欢篮球', { color: WARM, size: 19, bold: true });
@@ -60,7 +59,7 @@
     title: '一、情境导入：找"共同的人"',
     bbox: [-10, 7.5, 10, -7.5],
     board: { axis: false, keepAspect: true },
-    setup: function (stage, panel) { S = stage; P = panel; cast = {}; },
+    setup: function (stage, panel) { S = stage; P = panel; cast = {}; ax = -5.2; bx = 5.2; },
     steps: [
       {
         narration: '班级兴趣调查：集合 $A$ 是喜欢<b>篮球</b>的同学，集合 $B$ 是喜欢<b>足球</b>的同学。',
@@ -81,6 +80,7 @@
         enter: function (anim) {
           var d = anim ? 1300 : 0;
           var moves = [
+            // 本动画假定两圆始终关于 y 轴对称（bx = -ax）
             S.animate({
               from: ax, to: -2.2, duration: d,
               onUpdate: function (v) { ax = v; bx = -v; S.getBoard().update(); },
