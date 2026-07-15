@@ -3,42 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>指数函数的图像和性质 · 动态课件</title>
-<link rel="stylesheet" href="vendor/jsxgraph/jsxgraph.css">
-<link rel="stylesheet" href="vendor/katex/katex.min.css">
-<link rel="stylesheet" href="css/main.css">
+<title>数学动态课件库</title>
+<style>
+  :root { --accent: #6a1b9a; --ink: #263238; --muted: #78909c; --bg: #f7f8fa; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--ink);
+    max-width: 1080px; margin: 0 auto; padding: 36px 24px 80px;
+  }
+  header h1 { font-size: 30px; letter-spacing: 1px; }
+  header .sub { color: var(--muted); margin-top: 8px; font-size: 15px; }
+  .stage { margin-top: 34px; }
+  .stage > h2 {
+    font-size: 22px; color: var(--accent);
+    border-bottom: 2px solid #e1bee7; padding-bottom: 8px;
+  }
+  .book { margin: 18px 0 6px 6px; }
+  .book > h3 { font-size: 18px; margin-bottom: 8px; }
+  .chapter { margin: 6px 0 6px 20px; }
+  .chapter > h4 { font-size: 15.5px; font-weight: 600; color: #455a64; }
+  .lessons { list-style: none; margin: 4px 0 10px 18px; }
+  .lessons li { margin: 5px 0; font-size: 15px; }
+  .lessons a {
+    color: var(--accent); text-decoration: none; font-weight: 600;
+    padding: 3px 10px; border-radius: 6px; background: #f3e5f5;
+  }
+  .lessons a:hover { background: #e1bee7; }
+  .badge {
+    display: inline-block; margin-left: 8px; font-size: 12px;
+    color: #2e7d32; background: #e8f5e9; border-radius: 4px; padding: 1px 7px;
+  }
+  .empty { color: #b0bec5; font-size: 13.5px; margin-left: 18px; }
+  footer { margin-top: 46px; color: var(--muted); font-size: 13.5px; line-height: 1.8; }
+</style>
 </head>
 <body>
 <header>
-  <h1>指数函数的图像和性质</h1>
-  <nav id="dots" aria-label="环节进度"></nav>
+  <h1>数学动态课件库</h1>
+  <p class="sub" id="summary">课堂投影 · 双击即用 · 完全离线</p>
 </header>
-<main>
-  <div id="board" class="jxgbox"></div>
-  <aside id="panel" aria-label="讲解面板"></aside>
-</main>
+<main id="tree"></main>
 <footer>
-  <button id="btn-prev" type="button">◀ 上一步</button>
-  <button id="btn-next" type="button">下一步 ▶</button>
-  <span id="step-ind"></span>
-  <span class="hint">空格/→ 下一步 · ← 上一步 · 1-7 跳环节 · Home 回环节首步 · F 全屏</span>
-  <button id="btn-fs" type="button">⛶ 全屏</button>
+  课件内操作：空格/→ 下一步 · ← 上一步 · 数字键跳环节 · Home 回环节首步 · F 全屏（翻页笔即 PgUp/PgDn）。
 </footer>
-<div id="fatal" hidden>课件资源加载失败：请确认 vendor 目录完整，并使用 Chrome / Edge 浏览器打开。</div>
-<script src="vendor/jsxgraph/jsxgraphcore.js"></script>
-<script src="vendor/katex/katex.min.js"></script>
-<script src="vendor/katex/contrib/auto-render.min.js"></script>
-<script src="js/tween.js"></script>
-<script src="js/panel.js"></script>
-<script src="js/stage.js"></script>
-<script src="js/director.js"></script>
-<script src="js/scenes/s1-review.js"></script>
-<script src="js/scenes/s2-plotting.js"></script>
-<script src="js/scenes/s3-symmetry.js"></script>
-<script src="js/scenes/s4-explore.js"></script>
-<script src="js/scenes/s5-properties.js"></script>
-<script src="js/scenes/s6-compare.js"></script>
-<script src="js/scenes/s7-population.js"></script>
-<script src="js/app.js"></script>
+<script src="courses.js"></script>
+<script>
+(function () {
+  'use strict';
+  var tree = document.getElementById('tree');
+  var doneCount = 0, plannedChapters = 0;
+
+  function el(tag, cls, text) {
+    var d = document.createElement(tag);
+    if (cls) d.className = cls;
+    if (text) d.textContent = text;
+    return d;
+  }
+
+  window.COURSES.stages.forEach(function (st) {
+    var stageEl = el('section', 'stage');
+    stageEl.appendChild(el('h2', null, st.title));
+    st.books.forEach(function (bk) {
+      var bookEl = el('div', 'book');
+      bookEl.appendChild(el('h3', null, bk.title));
+      bk.chapters.forEach(function (ch) {
+        var chEl = el('div', 'chapter');
+        chEl.appendChild(el('h4', null, ch.title));
+        var lessons = ch.lessons || [];
+        if (!lessons.length) {
+          plannedChapters += 1;
+          chEl.appendChild(el('div', 'empty', '规划中'));
+        } else {
+          var ul = el('ul', 'lessons');
+          lessons.forEach(function (ls) {
+            var li = el('li');
+            if (ls.status === 'done') {
+              doneCount += 1;
+              var a = el('a', null, ls.title);
+              a.href = ls.path + 'index.html';
+              li.appendChild(a);
+              li.appendChild(el('span', 'badge', '可上课'));
+            } else {
+              li.appendChild(el('span', 'empty', ls.title + '（制作中）'));
+            }
+            ul.appendChild(li);
+          });
+          chEl.appendChild(ul);
+        }
+        bookEl.appendChild(chEl);
+      });
+      stageEl.appendChild(bookEl);
+    });
+    tree.appendChild(stageEl);
+  });
+
+  document.getElementById('summary').textContent =
+    '课堂投影 · 双击即用 · 完全离线 —— 已完成 ' + doneCount + ' 课，' +
+    plannedChapters + ' 章规划中';
+})();
+</script>
 </body>
 </html>

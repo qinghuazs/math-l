@@ -17,7 +17,7 @@ function makeEnv() {
       }),
     };
   }
-  const CW = loadCW(['js/director.js']);
+  const CW = loadCW(['shared/core/director.js']);
   const win = { location: { hash: '' }, addEventListener: function () {} };
   const stage = { reset: function () { log.push('reset'); } };
   const panel = {
@@ -77,7 +77,7 @@ test('jump 任意跳转 + parseHash 解析与越界钳制', async function () {
 
 test('enter 同步抛异常不死锁：busy 释放、光标不前移、后续操作可用', async function () {
   const log = [];
-  const CW = loadCW(['js/director.js']);
+  const CW = loadCW(['shared/core/director.js']);
   const win = { location: { hash: '' }, addEventListener: function () {}, console: { error: function () { log.push('err'); } } };
   const stage = { reset: function () { log.push('reset'); } };
   const panel = { setScene: function () {}, setNarration: function () {}, clearExtras: function () {}, setControls: function () {} };
@@ -100,7 +100,7 @@ test('enter 同步抛异常不死锁：busy 释放、光标不前移、后续操
 
 test('enter 返回 reject 的 Promise：replay 释放 busy、导演仍可操作', async function () {
   const log = [];
-  const CW = loadCW(['js/director.js']);
+  const CW = loadCW(['shared/core/director.js']);
   const win = { location: { hash: '' }, addEventListener: function () {}, console: { error: function () { log.push('err'); } } };
   const stage = { reset: function () { log.push('reset'); } };
   const panel = { setScene: function () {}, setNarration: function () {}, clearExtras: function () {}, setControls: function () {} };

@@ -4,7 +4,7 @@ const assert = require('node:assert');
 const { loadCW } = require('./helpers/load.js');
 
 test('easings 数学性质', function () {
-  const CW = loadCW(['js/tween.js']);
+  const CW = loadCW(['shared/core/tween.js']);
   const e = CW.tween.easings;
   assert.equal(e.linear(0.5), 0.5);
   assert.equal(e.easeInOut(0), 0);
@@ -14,7 +14,7 @@ test('easings 数学性质', function () {
 });
 
 test('tween 从 0 到 10 收敛到终值且进度回调递增', async function () {
-  const CW = loadCW(['js/tween.js']);
+  const CW = loadCW(['shared/core/tween.js']);
   let last = null;
   const seen = [];
   await new Promise(function (done) {
@@ -26,7 +26,7 @@ test('tween 从 0 到 10 收敛到终值且进度回调递增', async function (
 });
 
 test('cancel 后不再触发 onDone', async function () {
-  const CW = loadCW(['js/tween.js']);
+  const CW = loadCW(['shared/core/tween.js']);
   let doneCalled = false;
   const h = CW.tween({ from: 0, to: 1, duration: 50, onUpdate: function () {}, onDone: function () { doneCalled = true; } });
   h.cancel();
@@ -35,7 +35,7 @@ test('cancel 后不再触发 onDone', async function () {
 });
 
 test('duration 为 0 时立即完成且终值精确', async function () {
-  const CW = loadCW(['js/tween.js']);
+  const CW = loadCW(['shared/core/tween.js']);
   let last = null, lastP = null, updates = 0;
   await new Promise(function (done) {
     CW.tween({ from: 3, to: 7, duration: 0, onUpdate: function (v, p) { last = v; lastP = p; updates++; }, onDone: done });
@@ -46,7 +46,7 @@ test('duration 为 0 时立即完成且终值精确', async function () {
 });
 
 test('未知 easing 名回退到 easeInOut 并正常完成', async function () {
-  const CW = loadCW(['js/tween.js']);
+  const CW = loadCW(['shared/core/tween.js']);
   let last = null;
   await new Promise(function (done) {
     CW.tween({ from: 0, to: 5, duration: 20, easing: 'nope', onUpdate: function (v) { last = v; }, onDone: done });
