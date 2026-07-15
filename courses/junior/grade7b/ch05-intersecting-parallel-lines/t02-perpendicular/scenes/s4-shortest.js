@@ -65,7 +65,7 @@
           S.dropPoint('s4-C', 5, LY, { name: '', color: GRAY, size: 3, animate: false });
           S.addText('s4-labC', 5.2, LY - 0.6, 'C', { color: GRAY, size: 15 });
 
-          // 显示各线段长度标注（PA=3，PB≈5，PC≈5.8）
+          // 显示各线段长度标注（PA=6，PB≈7.2，PC≈7.8）
           S.addText('s4-len-PA', 0.8, 0.1, 'PA = 6', { color: WARM, size: 15 });
           S.addText('s4-len-PB', -2.8, 0.3, 'PB ≈ 7.2', { color: GRAY, size: 14 });
           S.addText('s4-len-PC', 3.2, 0.3, 'PC ≈ 7.8', { color: GRAY, size: 14 });

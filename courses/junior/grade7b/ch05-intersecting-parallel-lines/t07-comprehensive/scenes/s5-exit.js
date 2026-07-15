@@ -239,7 +239,7 @@
             { fillColor: '#ffebee', fillOpacity: 0.95, strokeColor: RED, strokeWidth: 3 });
           S.addText('err-title', 0, 6.7, '⚠ 易错提醒', { size: 18, color: RED, anchorX: 'middle' });
           S.addText('err-t1', 0, 5.7,
-            '✗ 错误：已知 a∥b，∴ a∥b（判定）——混淆了！',
+            '✗ 错误：已知 a∥b 却又用判定去证 a∥b——方向混淆了！',
             { size: 14, color: RED, anchorX: 'middle' });
           S.addText('err-t2', 0, 4.6,
             '✓ 正确：已知 a∥b，用性质推角；已知角，用判定推线',
