@@ -339,9 +339,17 @@
         };
       },
       // 角标注（弧+可选标签），三点式 p1-顶点-p2 逆时针；坐标可为函数（跟随动态图形）。
-      // o:{radius,color,label,fill,opacity,ortho:true 直角显方形标记}
+      // o:{radius,color,label,fill,opacity,ortho:true 直角显方形标记,reflex:true 允许优角}
+      // 默认自愈为劣角（≤180°）：按创建时刻位置检测，方向传反自动交换 p1/p2。
       addAngle: function (id, p1, vtx, p2, o) {
         o = o || {};
+        if (!o.reflex) {
+          var cv = function (c) { return typeof c === 'function' ? c() : c; };
+          var sweep = Math.atan2(cv(p2[1]) - cv(vtx[1]), cv(p2[0]) - cv(vtx[0]))
+                    - Math.atan2(cv(p1[1]) - cv(vtx[1]), cv(p1[0]) - cv(vtx[0]));
+          while (sweep < 0) sweep += 2 * Math.PI;
+          if (sweep > Math.PI) { var swp = p1; p1 = p2; p2 = swp; }
+        }
         var ga = ghost(p1), gv = ghost(vtx), gb = ghost(p2);
         var a = board.create('angle', [ga, gv, gb], {
           radius: o.radius == null ? 1 : o.radius,
