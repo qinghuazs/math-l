@@ -378,13 +378,17 @@
         board.update();
         return r;
       },
-      // 通用多边形（支点三角/箭头等示意图形）。pts: [[x,y],...]（坐标可为函数）
+      // 通用多边形（支点三角/箭头/卡片底等示意图形）。pts: [[x,y],...]（坐标可为函数）
+      // o 同时接受直觉别名：color/fillColor、opacity/fillOpacity、borderColor/strokeColor、borderWidth/strokeWidth
       addPolygon: function (id, pts, o) {
         o = o || {};
+        var fill = o.color || o.fillColor || '#546e7a';
+        var fop = o.opacity != null ? o.opacity : (o.fillOpacity != null ? o.fillOpacity : 1);
+        var bw = o.borderWidth != null ? o.borderWidth : (o.strokeWidth != null ? o.strokeWidth : 0);
         var poly = board.create('polygon', pts, {
-          fillColor: o.color || '#546e7a', fillOpacity: o.opacity == null ? 1 : o.opacity,
+          fillColor: fill, fillOpacity: fop,
           highlight: false, fixed: true,
-          borders: { strokeWidth: o.borderWidth == null ? 0 : o.borderWidth, strokeColor: o.borderColor || o.color || '#546e7a', highlight: false },
+          borders: { strokeWidth: bw, strokeColor: o.borderColor || o.strokeColor || fill, highlight: false },
           vertices: { visible: false, fixed: true },
         });
         board.update();
