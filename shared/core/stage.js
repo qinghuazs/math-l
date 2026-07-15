@@ -9,12 +9,13 @@
     var reg = new Map(); // id -> JXG 对象（或对象数组）
     var tweens = []; // 活跃动画句柄，reset 时统一取消
 
-    // opts（可选，由场景的 board 字段传入）：{axis:false 关坐标轴, keepAspect:true 等比（画圆必开）}
+    // opts（可选，由场景的 board 字段传入）：{axis:false 关坐标轴, keepAspect:true 等比（画圆必开）, grid:true 网格（平移作图）}
     function initBoard(bbox, opts) {
       opts = opts || {};
       board = JXG.JSXGraph.initBoard(containerId, {
         boundingbox: bbox || DEFAULT_BBOX,
         axis: opts.axis !== false,
+        grid: !!opts.grid,
         keepaspectratio: !!opts.keepAspect,
         showNavigation: false,
         showCopyright: false,
@@ -44,6 +45,11 @@
       });
       tweens.push(h);
       return h;
+    }
+
+    // 隐形构造点（射线/角的几何锚点，不显示；随所属 id 一并注册清理）
+    function ghost(coords) {
+      return board.create('point', coords, { visible: false, fixed: true, withLabel: false });
     }
 
     // 幂等登记：同 id 再次绘制先删旧对象——场景可放心用固定 id 重建状态
@@ -331,6 +337,38 @@
             });
           },
         };
+      },
+      // 角标注（弧+可选标签），三点式 p1-顶点-p2 逆时针；坐标可为函数（跟随动态图形）。
+      // o:{radius,color,label,fill,opacity,ortho:true 直角显方形标记}
+      addAngle: function (id, p1, vtx, p2, o) {
+        o = o || {};
+        var ga = ghost(p1), gv = ghost(vtx), gb = ghost(p2);
+        var a = board.create('angle', [ga, gv, gb], {
+          radius: o.radius == null ? 1 : o.radius,
+          strokeColor: o.color || '#e64a19', strokeWidth: 2,
+          fillColor: o.fill || o.color || '#e64a19',
+          fillOpacity: o.opacity == null ? 0.18 : o.opacity,
+          orthoType: o.ortho ? 'square' : 'none',
+          withLabel: o.label != null, name: o.label || '',
+          label: { fontSize: o.labelSize || 16, strokeColor: o.labelColor || o.color || '#e64a19' },
+          fixed: true, highlight: false,
+        });
+        put(id, [a, ga, gv, gb]);
+        board.update();
+        return a;
+      },
+      // 射线：从 from 出发经 through 无限延伸。o:{color,width,dash}
+      addRay: function (id, from, through, o) {
+        o = o || {};
+        var g1 = ghost(from), g2 = ghost(through);
+        var r = board.create('line', [g1, g2], {
+          straightFirst: false, straightLast: true,
+          strokeColor: o.color || '#37474f', strokeWidth: o.width == null ? 3 : o.width,
+          dash: o.dash || 0, highlight: false, fixed: true,
+        });
+        put(id, [r, g1, g2]);
+        board.update();
+        return r;
       },
       // 通用多边形（支点三角/箭头等示意图形）。pts: [[x,y],...]（坐标可为函数）
       addPolygon: function (id, pts, o) {
