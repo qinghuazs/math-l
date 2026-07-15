@@ -125,16 +125,28 @@
         });
       },
       // 点。o: {color,name,size,animate,labelOffset}
+      // name 含 $..$ 数学式时改用独立 addText 渲染（JSXGraph 原生 point label 不经 tex，$ 会字面显示）
       dropPoint: function (id, x, y, o) {
         o = o || {};
         var target = o.size == null ? 3.5 : o.size;
+        var hasTexName = typeof o.name === 'string' && o.name.indexOf('$') !== -1;
         var p = board.create('point', [x, y], {
-          name: o.name || '', size: target,
+          name: hasTexName ? '' : (o.name || ''), size: target,
           strokeColor: o.color || '#d32f2f', fillColor: o.color || '#d32f2f',
           fixed: true, highlight: false,
           label: { offset: o.labelOffset || [8, 10], fontSize: 14, strokeColor: '#455a64' },
         });
-        put(id, p);
+        if (hasTexName) {
+          var off = o.labelOffset || [8, 10];
+          var lt = board.create('text',
+            [x + (off[0] >= 0 ? 0.35 : -0.35), y + (off[1] < 0 ? -0.55 : 0.5), tex(o.name)], {
+              fontSize: 14, strokeColor: o.color || '#455a64',
+              anchorX: off[0] >= 0 ? 'left' : 'right', fixed: true, highlight: false,
+            });
+          put(id, [p, lt]);
+        } else {
+          put(id, p);
+        }
         board.update();
         if (!o.animate) return Promise.resolve(p);
         return new Promise(function (res) {
