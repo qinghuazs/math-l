@@ -28,7 +28,7 @@
     function replay(ts, tk, animateLast) {
       busy = true;
       var sc = scenes[ts];
-      stage.reset(sc.bbox);
+      stage.reset(sc.bbox, sc.board);
       panel.setScene(sc.title);
       panel.clearExtras();
       panel.setControls(null);

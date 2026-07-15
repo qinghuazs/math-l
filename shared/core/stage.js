@@ -9,10 +9,13 @@
     var reg = new Map(); // id -> JXG 对象（或对象数组）
     var tweens = []; // 活跃动画句柄，reset 时统一取消
 
-    function initBoard(bbox) {
+    // opts（可选，由场景的 board 字段传入）：{axis:false 关坐标轴, keepAspect:true 等比（画圆必开）}
+    function initBoard(bbox, opts) {
+      opts = opts || {};
       board = JXG.JSXGraph.initBoard(containerId, {
         boundingbox: bbox || DEFAULT_BBOX,
-        axis: true,
+        axis: opts.axis !== false,
+        keepaspectratio: !!opts.keepAspect,
         showNavigation: false,
         showCopyright: false,
         pan: { enabled: false },
@@ -24,7 +27,7 @@
         },
       });
     }
-    initBoard(DEFAULT_BBOX);
+    initBoard(DEFAULT_BBOX, {});
 
     // 所有舞台动画统一经此登记，reset 时可整体取消；完成后自回收句柄
     function runTween(opts) {
@@ -58,12 +61,12 @@
     var stage = {
       getBoard: function () { return board; },
       get: function (id) { return reg.get(id); },
-      reset: function (bbox) {
+      reset: function (bbox, opts) {
         tweens.forEach(function (t) { t.cancel(); }); // 必须在 freeBoard 前：防 onUpdate 摸到已销毁对象
         tweens.length = 0;
         JXG.JSXGraph.freeBoard(board);
         reg.clear();
-        initBoard(bbox || DEFAULT_BBOX);
+        initBoard(bbox || DEFAULT_BBOX, opts);
       },
       remove: function (id) {
         var o = reg.get(id);
@@ -286,6 +289,56 @@
             from: from, to: to, duration: o.duration || 1700,
             onUpdate: function (v) { x = v; board.update(); },
             onDone: function () { board.removeObject(l); board.update(); res(); },
+          });
+        });
+      },
+      // 圆（文氏图等）。cx/cy/r 可为数或函数（动态圆）。o:{color,width,fill,fillOpacity,dash}
+      addCircle: function (id, cx, cy, r, o) {
+        o = o || {};
+        var c = board.create('circle', [[cx, cy], r], {
+          strokeColor: o.color || '#37474f', strokeWidth: o.width == null ? 3 : o.width,
+          fillColor: o.fill || 'none', fillOpacity: o.fillOpacity == null ? 0 : o.fillOpacity,
+          dash: o.dash || 0, fixed: true, highlight: false,
+        });
+        put(id, c);
+        board.update();
+        return c;
+      },
+      // 可自由移动的文本元素（文氏图中的人名/数字卡）。返回 {obj, moveTo(x,y,ms)->Promise}
+      // 注意：moveTo 须顺序 await，并发调用会竞争闭包坐标。
+      actor: function (id, x, y, str, o) {
+        o = o || {};
+        var px = x, py = y;
+        var t = board.create('text',
+          [function () { return px; }, function () { return py; }, str], {
+            fontSize: o.size || 17, strokeColor: o.color || '#37474f',
+            cssStyle: o.bold ? 'font-weight:700' : '',
+            anchorX: 'middle', anchorY: 'middle',
+            fixed: true, highlight: false,
+          });
+        put(id, t);
+        board.update();
+        return {
+          obj: t,
+          moveTo: function (nx, ny, duration) {
+            var sx = px, sy = py;
+            return new Promise(function (res) {
+              runTween({
+                from: 0, to: 1, duration: duration == null ? 900 : duration,
+                onUpdate: function (v) { px = sx + (nx - sx) * v; py = sy + (ny - sy) * v; board.update(); },
+                onDone: res,
+              });
+            });
+          },
+        };
+      },
+      // 通用补间：场景自定义动画的正规出口（纳入 reset 统一取消体系，勿在场景直用 CW.tween）
+      animate: function (opts) {
+        return new Promise(function (res) {
+          runTween({
+            from: opts.from, to: opts.to, duration: opts.duration, easing: opts.easing,
+            onUpdate: opts.onUpdate,
+            onDone: res,
           });
         });
       },

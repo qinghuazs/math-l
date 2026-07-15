@@ -48,6 +48,19 @@ window.COURSES = {
           { id: 'ch28', title: '第28章 锐角三角函数', lessons: [] },
           { id: 'ch29', title: '第29章 投影与视图', lessons: [] },
         ] },
+        { id: 'bridge', title: '初高中衔接', chapters: [
+          { id: 'ch01', title: '集合初步', lessons: [
+            {
+              id: 'bridge-1.1',
+              title: '集合的交集',
+              path: 'courses/junior/bridge/ch01-sets/s1-intersection/',
+              status: 'done',
+              scenes: ['s1-intro.js', 's2-observe.js', 's3-concept.js', 's4-venn.js',
+                's5-practice.js', 's6-sports.js', 's7-summary.js'],
+              expectSteps: [4, 3, 4, 3, 4, 3, 5],
+            },
+          ] },
+        ] },
       ],
     },
     {

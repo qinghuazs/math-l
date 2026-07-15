@@ -23,7 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 每课页面加载 shared/core 五件 + 本课 scenes，`app.js` 在 DOMContentLoaded 装配；键盘与 URL hash 由导演统一处理：
 
 - **director.js（导演）**：维护光标 (环节 s, 步 k)。前进 = 执行新步 `enter(true)`；后退/任意跳转 = `stage.reset` → `scene.setup` → 步 0..k 依次 `enter(false)`（**"重置+快放"机制**）。这就是场景每步只写 enter、从不写逆操作的原因。`busy` 防抖挡住连按；异常路径必须释放 busy 且不提交光标（课堂不能死锁——有专门回归测试）。
-- **stage.js（舞台）**：JSXGraph 封装。`reg` 注册表按 id 管理对象，`put` 同 id 先删旧再登记（**幂等**——场景可放心用固定 id 重建状态）；`reset` = freeBoard 整板重建；所有动画必须经 `runTween` 登记（不要直接调 `CW.tween`），reset 时统一 cancel 防孤儿动画。
+- **stage.js（舞台）**：JSXGraph 封装。`reg` 注册表按 id 管理对象，`put` 同 id 先删旧再登记（**幂等**——场景可放心用固定 id 重建状态）；`reset` = freeBoard 整板重建；所有动画必须经 `runTween` 登记（不要直接调 `CW.tween`），reset 时统一 cancel 防孤儿动画。场景层自定义补间用 `stage.animate({from,to,duration,onUpdate})`（runTween 的正规出口）。几何/集合类课程 API：`addCircle`（圆，圆心/半径可传函数做动态动画）、`actor`（可自由移动的文本元素，返回 `{obj, moveTo(x,y,ms)}`，moveTo 须顺序 await）。场景可声明 `board: {axis:false, keepAspect:true}` 关闭坐标轴/开启等比（**画圆必须开 keepAspect，否则圆被拉成椭圆**），由导演透传给 `stage.reset`。
 - **panel.js（面板）**：讲解词/KaTeX/数值表/结论卡片。`renderTable` 全量重绘幂等；`renderCard` 只追加不去重——导演 replay 前会调 `clearExtras` 清场，这对契约不能破坏。
 - **scenes/（每课剧本）**：纯数据 `{id, title, bbox, setup(stage,panel), steps:[{narration, enter(anim)}]}`，按该课 `index.html` 的 script 顺序注册进 `CW.scenes`（每课页面独立加载，无跨课冲突）。
 
