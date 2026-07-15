@@ -13,7 +13,7 @@
     setup: function (stage, panel) { S = stage; P = panel; },
     steps: [
       {
-        narration: '求一个数的平方根的运算，叫做<b>开平方</b>。开平方用根号 $\\sqrt{\\phantom{0}}$ 表示：$\\sqrt{a}$ 读作"a 的算术平方根"，表示 $a$ 的<b>非负平方根</b>（只取正值那个）。$a$ 的两个平方根合写为 $\\pm\\sqrt{a}$。',
+        narration: '求一个数的平方根的运算，叫做<b>开平方</b>。开平方用根号 $\\sqrt{\\phantom{0}}$ 表示：$\\sqrt{a}$ 读作"<b>根号 a</b>"，表示 $a$ 的<b>算术平方根</b>（非负平方根，只取正值那个）。$a$ 的两个平方根合写为 $\\pm\\sqrt{a}$。',
         enter: function (anim) {
           // 展示根号的结构
           S.addText('s4-title', 0, 8.5, '开平方的记号', { color: INK, size: 22, anchorX: 'middle' });
