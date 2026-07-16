@@ -45,7 +45,7 @@
         { size: 12, color: COLORS[i], anchorX: 'middle' });
     }
     S.addText('s5-title', CX + ox, CY + oy + 5.2,
-      '某班50名学生兴趣爱好扇形图',
+      '某班40名学生兴趣爱好扇形图',
       { size: 13, color: INK, anchorX: 'middle' });
   }
 
