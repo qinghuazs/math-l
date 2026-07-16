@@ -436,6 +436,56 @@
         board.update();
         return put(id, poly);
       },
+      // 条形/直方图矩形柱。底边中心 (cx, 0)、宽 w、高 h（h 可为函数做生长动画）。
+      // o:{color,fillOpacity,label,labelColor}。柱从 x 轴向上长，配合带轴画板。
+      addBar: function (id, cx, w, h, o) {
+        o = o || {};
+        var hf = typeof h === 'function' ? h : function () { return h; };
+        var bar = board.create('polygon', [
+          [function () { return cx - w / 2; }, 0],
+          [function () { return cx + w / 2; }, 0],
+          [function () { return cx + w / 2; }, function () { return hf(); }],
+          [function () { return cx - w / 2; }, function () { return hf(); }],
+        ], {
+          fillColor: o.color || '#1565c0', fillOpacity: o.fillOpacity == null ? 0.75 : o.fillOpacity,
+          highlight: false, fixed: true,
+          borders: { strokeWidth: 1.5, strokeColor: o.color || '#1565c0', highlight: false },
+          vertices: { visible: false, fixed: true },
+        });
+        board.update();
+        return put(id, bar);
+      },
+      // 扇形图扇区。圆心 center、半径 r、起始角 a0、终止角 a1（度，逆时针）。
+      // o:{color,fillOpacity,borderColor}。用 3 点式 sector：圆心-起点-终点。
+      addSector: function (id, center, r, a0, a1, o) {
+        o = o || {};
+        var cx = center[0], cy = center[1], d2r = Math.PI / 180;
+        var gc = ghost([cx, cy]);
+        var gs = ghost([cx + r * Math.cos(a0 * d2r), cy + r * Math.sin(a0 * d2r)]);
+        var ge = ghost([cx + r * Math.cos(a1 * d2r), cy + r * Math.sin(a1 * d2r)]);
+        var sec = board.create('sector', [gc, gs, ge], {
+          fillColor: o.color || '#1565c0', fillOpacity: o.fillOpacity == null ? 0.7 : o.fillOpacity,
+          strokeColor: o.borderColor || '#fff', strokeWidth: o.borderWidth == null ? 2 : o.borderWidth,
+          highlight: false, fixed: true,
+        });
+        put(id, [sec, gc, gs, ge]);
+        board.update();
+        return sec;
+      },
+      // 折线图（多点顺次连线）。pts: [[x,y],...]（坐标可为数或函数）。o:{color,width,dash}
+      addPolyline: function (id, pts, o) {
+        o = o || {};
+        var segs = [];
+        var i;
+        for (i = 0; i < pts.length - 1; i++) {
+          segs.push(board.create('segment', [pt(pts[i]), pt(pts[i + 1])], {
+            strokeColor: o.color || '#e64a19', strokeWidth: o.width == null ? 2.5 : o.width,
+            dash: o.dash || 0, highlight: false, fixed: true,
+          }));
+        }
+        board.update();
+        return put(id, segs);
+      },
       // 通用补间：场景自定义动画的正规出口（纳入 reset 统一取消体系，勿在场景直用 CW.tween）
       animate: function (opts) {
         return new Promise(function (res) {
