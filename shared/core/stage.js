@@ -290,6 +290,7 @@
       pulse: function (id, times) {
         var el = reg.get(id);
         if (!el) return Promise.resolve();
+        if (Array.isArray(el)) el = el[0]; // 数组注册（如带 $..$ 名的 dropPoint）取主对象脉冲
         var n = times || 3, i = 0;
         var base = el.getAttribute('size') || 3.5;
         return new Promise(function (res) {
