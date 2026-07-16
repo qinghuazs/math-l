@@ -59,6 +59,7 @@
       {
         narration: '检验：2×2+3×1=7 对，3×2-1=5 也对。方法选择的口诀再背一遍：见系数 1 想代入，见同倍数想加减，都不明显先乘再加减。',
         enter: function () {
+          S.remove('s2-d1'); S.remove('s2-line'); S.remove('s2-d2'); S.remove('s2-d3');
           S.actor('s2-check', 0, 5.0, '检验：$2 \\times 2 + 3 = 7$ ✓　$3 \\times 2 - 1 = 5$ ✓', { color: GREEN, size: 17 });
           S.actor('s2-ans', 0, 3.0, '解：$x=2$，$y=1$', { color: RED, size: 22, bold: true });
           P.renderCard('<b>方法选择口诀</b>：见系数 1 想代入，见同倍数想加减，都不明显先乘再加减。', 'cool');

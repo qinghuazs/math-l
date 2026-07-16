@@ -41,6 +41,8 @@
       {
         narration: '设高速走 x 小时、普通路走 y 小时。时间关系 x+y=2，路程关系 100x+60y=180。用代入法：y=2-x 代入②：100x+120-60x=180，40x=60，x=1.5，于是 y=0.5。',
         enter: function (anim) {
+          S.remove('s3-road-hw'); S.remove('s3-road-nm'); S.remove('s3-lbl1');
+          S.remove('s3-lbl2'); S.remove('s3-total');
           S.actor('s3-d1', 0, 6.2, '$x+y=2$ ①　$100x+60y=180$ ②', { color: INK, size: 18, bold: true });
           S.actor('s3-d2', 0, 4.6, '①变形：$y=2-x$，代入②', { color: BLUE, size: 16 });
           S.actor('s3-d3', 0, 3.2, '$100x + 60(2-x) = 180 \\Rightarrow 40x = 60$', { color: ORANGE, size: 17 });
@@ -52,6 +54,7 @@
       {
         narration: '检验兼合理性判断：时间 1.5+0.5=2 小时对；路程 150+30=180 千米对；两个时间都是正数、符合实际。答：高速走了 1.5 小时，普通公路走了 0.5 小时。应用题三查：查方程、查计算、查合理。',
         enter: function () {
+          S.remove('s3-d1'); S.remove('s3-d2'); S.remove('s3-d3'); S.remove('s3-d4');
           S.actor('s3-check', 0, 5.2, '检验：$1.5+0.5=2$ ✓　$150+30=180$ ✓　均为正 ✓', { color: GREEN, size: 16 });
           S.actor('s3-ans', 0, 3.2, '答：高速 1.5 小时，普通路 0.5 小时', { color: RED, size: 20, bold: true });
           P.renderCard('<b>应用题三查</b>：查方程（等量关系对吗）、查计算（解对吗）、查合理（符合实际吗）。', 'warm');

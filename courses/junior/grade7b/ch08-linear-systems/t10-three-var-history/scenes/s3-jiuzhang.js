@@ -55,8 +55,10 @@
         },
       },
       {
-        narration: '古人没有字母 x、y、z，怎么表示方程组？用**算筹**！把每个方程的系数用小竹棍竖着摆成一列，几个方程并排摆成一个方阵——这个"方"阵里的每一列都是一个方"程"，这就是"方程"名字的由来。请看示意：三列算筹，就是三个方程的系数。',
+        narration: '古人没有字母 x、y、z，怎么表示方程组？用<b>算筹</b>！把每个方程的系数用小竹棍竖着摆成一列，几个方程并排摆成一个方阵——这个"方"阵里的每一列都是一个方"程"，这就是"方程"名字的由来。请看示意：三列算筹，就是三个方程的系数。',
         enter: function (anim) {
+          S.remove('s3-title'); S.remove('s3-intro'); S.remove('s3-book-bg');
+          S.remove('s3-heti'); S.remove('s3-heti2');
           S.actor('s3-rod-title', 0, 7.0, '算筹方阵：竖列即方程', { color: PURPLE, size: 20, bold: true });
           // 画 3×3 示意方阵（列=方程，行=未知数系数），用 1~3 根算筹示意
           var grid = [
@@ -80,8 +82,17 @@
         },
       },
       {
-        narration: '摆好方阵后怎么解？《九章算术》的口诀叫"**遍乘直除**"：把某一列整体乘一个数（遍乘），再反复减去另一列（直除），直到某个未知数的系数变成零——同学们发现了吗？这不就是我们刚学的**加减消元法**吗！先乘再减、消去一元，古今方法完全一致。',
+        narration: '摆好方阵后怎么解？《九章算术》的口诀叫"<b>遍乘直除</b>"：把某一列整体乘一个数（遍乘），再反复减去另一列（直除），直到某个未知数的系数变成零——同学们发现了吗？这不就是我们刚学的<b>加减消元法</b>吗！先乘再减、消去一元，古今方法完全一致。',
         enter: function () {
+          // 清掉步2 算筹方阵（含逐根算筹）
+          var c, r, i;
+          for (c = 0; c < 3; c++) {
+            for (r = 0; r < 3; r++) {
+              for (i = 0; i < 3; i++) { S.remove('s3-rn-' + c + '-' + r + '-' + i); }
+            }
+            S.remove('s3-col-' + c);
+          }
+          S.remove('s3-rod-title'); S.remove('s3-grid-bg'); S.remove('s3-note');
           S.actor('s3-fa-title', 0, 6.5, '"遍乘直除" = 先乘再减 = 加减消元！', { color: RED, size: 21, bold: true });
           S.actor('s3-fa1', -4.5, 4.2, '遍乘\n（整列×同一数）', { color: ORANGE, size: 16, bold: true, css: 'background:#fff3e0;border-radius:8px;padding:8px 16px;' });
           S.actor('s3-arrow', 0, 4.2, '$\\Rightarrow$', { color: INK, size: 22 });

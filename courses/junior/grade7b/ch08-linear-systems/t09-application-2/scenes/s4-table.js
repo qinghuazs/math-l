@@ -24,7 +24,7 @@
     },
     steps: [
       {
-        narration: '第三类进阶题型——从表格中读取信息。生活中很多数据是以表格形式出现的。请看这张购物记录表：第一次买了 2 件 A 商品和 3 件 B 商品，共花 32 元；第二次买了 5 件 A 和 2 件 B，共花 47 元。求 A、B 商品的单价。关键：表格的**每一行**就是一个等量关系！',
+        narration: '第三类进阶题型——从表格中读取信息。生活中很多数据是以表格形式出现的。请看这张购物记录表：第一次买了 2 件 A 商品和 3 件 B 商品，共花 32 元；第二次买了 5 件 A 和 2 件 B，共花 47 元。求 A、B 商品的单价。关键：表格的<b>每一行</b>就是一个等量关系！',
         enter: function () {
           S.actor('s4-title', 0, 7.2, '表格信息题：读行列方程', { color: BLUE, size: 21, bold: true });
           P.renderTable({
@@ -43,6 +43,7 @@
       {
         narration: '系数既不相同也不相反，用上节课的方法：先乘再消。消去 y——3 和 2 的最小公倍数是 6：①×2 得 4x+6y=64，②×3 得 15x+6y=141。两式相减：11x=77，x=7。回代①：14+3y=32，3y=18，y=6。',
         enter: function (anim) {
+          S.remove('s4-hint'); S.remove('s4-eq1'); S.remove('s4-eq2');
           S.actor('s4-d1', 0, 6.6, '①×2：$4x + 6y = 64$ ③', { color: ORANGE, size: 17 });
           S.actor('s4-d2', 0, 5.4, '②×3：$15x + 6y = 141$ ④', { color: GREEN, size: 17 });
           S.addSegment('s4-line', [-4.5, 4.7], [4.5, 4.7], { color: INK, width: 2, dash: 0 });
@@ -55,6 +56,8 @@
       {
         narration: '检验：第一次 2×7+3×6=14+18=32 元，对；第二次 5×7+2×6=35+12=47 元，也对！所以 A 商品单价 7 元、B 商品单价 6 元。表格题的秘诀就八个字：一行一式、逐行翻译。',
         enter: function () {
+          S.remove('s4-d1'); S.remove('s4-d2'); S.remove('s4-line');
+          S.remove('s4-d3'); S.remove('s4-d4');
           S.actor('s4-check', 0, 5.5, '检验：$2 \\times 7 + 3 \\times 6 = 32$ ✓  $5 \\times 7 + 2 \\times 6 = 47$ ✓', { color: GREEN, size: 16 });
           S.actor('s4-ans', 0, 3.5, '答：A 单价 7 元，B 单价 6 元', { color: RED, size: 20, bold: true });
           P.renderCard('<b>表格题口诀</b>：一行一式、逐行翻译。', 'warm');
